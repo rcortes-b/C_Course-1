@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*void area_rectangulo() {
     //Se inicializan las variables, el area es ancho * largo
@@ -102,8 +103,7 @@ void week_day() //Consiste en introducir un número del 1 al 7 y cada número co
             printf("\nJueves\n");
             break;
         case(5):
-          
-  printf("\nViernes\n");
+            printf("\nViernes\n");
             break;
         case(6):
             printf("\nSábado\n");
@@ -200,11 +200,112 @@ void min_and_max() //De un array de enteros coge el valor mínimo y el valor má
     }
     printf("El valor máximo del array es: %d\n", max);
     printf("El valor mínimo del array es: %d\n", min);
+}
+
+void hotel_rooms() //Introduce 'x' cantidad de habitaciones y le da un precio a cada una según la temporada l/m/h. No importa el número de habitación que introduzcas.
+{
+    int num_room;
+    float low_temp = 0, mid_temp = 0, high_temp = 0;
+    float low_avrg = 0, mid_avrg = 0, high_avrg = 0;
+    printf("Introduce el número de habitaciones que hay: ");
+    scanf("%d", &num_room);
+    float room_price[num_room][4];
+    for (int i = 0; i < num_room; i++) {
+        printf("\nIntroduce el número de habitación: ");
+        scanf("%d", &room_price[i][0]);
+        printf("Introduce el precio de la habitación en temporada baja: ");
+        scanf("%f", &room_price[i][1]);
+        printf("Introduce el precio de la habitación en temporada media: ");
+        scanf("%f", &room_price[i][2]);
+        printf("Introduce el precio de la habitación en temporada alta: ");
+        scanf("%f", &room_price[i][3]);
+        low_temp += room_price[i][1];
+        mid_temp += room_price[i][2];
+        high_temp += room_price[i][3];
+    }
+        low_avrg = low_temp / num_room;
+        mid_avrg = mid_temp / num_room;
+        high_avrg = high_temp / num_room;
+        printf("\nEl precio medio de las habitaciones en temporada baja es de: %.2f", low_avrg);
+        printf("\nEl precio medio de las habitaciones en temporada media es de: %.2f", mid_avrg);
+        printf("\nEl precio medio de las habitaciones en temporada alta es de: %.2f", high_avrg);
+}
+
+void intro_cadena()
+{
+    int cant_cad = 0, cant_pal = 0;
+    printf("¿Cuántas cadenas quieres introducir? ");
+    scanf("%d", &cant_cad);    
+    char *cadena[cant_cad];
+    char *cadenasrc;
+    for (int i = 0; i < cant_cad; i++) {
+      printf("¿Cuántas palabras tiene la cadena? ");
+      scanf("%d", &cant_pal);
+      cadena[i] = malloc(sizeof(char) * 100 * (cant_pal + 1));
+      for (int j = 0; j < cant_pal; j++) {
+        if (j == 0){ 
+            printf("Introduce la primera palabra: ");
+            scanf("%s", cadena[i]); }
+        else {
+        cadenasrc = malloc(sizeof(char) * 100);
+        printf("Introduce la siguiente palabra: ");
+        scanf("%s", cadenasrc);
+        strcat(cadena[i], cadenasrc);
+        }
+        if (j != cant_pal - 1)
+            strcat(cadena[i], " ");
+      }
+    }
+    for (int i = 0; i < cant_cad; i++) {
+        if (i == cant_cad - 1)
+            printf("%s", cadena[i]);
+        else
+            printf("%s-", cadena[i]);
+        free(cadena[i]);
+    }
+    free(cadenasrc);
+}
+
+void look_for_char()
+{
+    int cant_pal = 0;
+    printf("¿Cuántas palabras tiene la cadena que vas a introducir? ");
+    scanf("%d", &cant_pal);
+    char *str, *strsrc;
+    char c;
+    str = malloc(sizeof(char) * 100 * (cant_pal + 1));
+    for (int i = 0; i < cant_pal; i++) {
+        if (i == 0) {
+            printf("Introduce la primera palabra del string donde quieres buscar coincidencias: ");
+            scanf("%s", str); }
+        else {
+            strsrc = malloc(sizeof(char) * 100);
+            printf("Introduce la siguiente palabra de la cadena donde quuieres buscar coincidencias: ");
+            scanf("%s", strsrc);
+            strcat(str, strsrc);
+        }
+        if (i != cant_pal - 1)
+            strcat(str, " ");
+    }
+    printf("Introduce el carácter a buscar en la cadena: ");
+    scanf(" %c", &c);
+    for(int j = 0; str[j] != '\0'; j++) {
+        if (str[j] == c) {
+            printf("Hay una coincidencia en la posición número: %d", j);
+            break;
+        }
+        else if (str[j + 1] == '\0')
+            printf("No se ha encontrado ninguna coincidencia.");
+    }
 }*/
+void ()
+{
+    
+}
 
 int main() {
     //No necesito pedir parametros en las funciones debido a que depende del usuario mediante 'scanf'
-    /*area_rectangulo();
+/*  area_rectangulo();
     printf("\n");
     tres_caracteres();
     printf("\n");
@@ -225,6 +326,14 @@ int main() {
     avrg_pesos();
     printf("\n");
     min_and_max();
+    printf("\n");
+    hotel_rooms();
+    printf("\n");
+    intro_cadena();
+    printf("\n");
+    look_for_char();
     printf("\n");*/
+    ();
+    printf("\n");
     return 0;
 }
