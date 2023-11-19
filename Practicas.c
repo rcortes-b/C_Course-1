@@ -298,9 +298,63 @@ void look_for_char()
             printf("No se ha encontrado ninguna coincidencia.");
     }
 }*/
-void ()
+void basket_team()
 {
+    int cant_players, choose_menu;
+    float high_height;
+    char temp_name[100];
+    struct datage {
+        char name[100];
+        int age;
+        float height;
+    };
+    struct datage team_datage[5];
+    printf("¿Cuántos jugadores hay en el equipo? "); //Se supone que hay 5 pero, cuanto más variable mejor :)
+    scanf("%d", &cant_players);
+    printf("\n");
+    for (int i = 0; i < cant_players; i++) { //Esto almacena los datos de los jugadores del equipo :)
+        printf("Introduce el nombre del jugador número %d: ", i + 1); //Sólo puede mostrar nombre, no apellidos. Y el nombre debe ser simple.
+        scanf("%s", team_datage[i].name);
+        printf("Introduce la edad del jugador número %d: ", i + 1);
+        scanf("%d", &team_datage[i].age);
+        printf("Introduce la altura del jugador número %d: ", i + 1);
+        scanf("%f", &team_datage[i].height);
+        printf("\n");
+    }
+    high_height = team_datage[0]. height;
+    printf("-----Elige una opción-----\n"); //Presenta un menú con las 3 opciones disponibles
+    printf("--Introduce 1 para listar los nombres y la altura de los jugadores--\n");
+    printf("--Introduce 2 para buscar un jugador por su nombre y presentar su altura y su edad--\n");
+    printf("--Introduce 3 para ver cual es el nombre y la edad del jugador más alto del equipo--\n");
+    printf("Tu elección: ");
+    scanf("%d", &choose_menu);
     
+    if (choose_menu == 1) {
+        for (int i = 0; i < cant_players; i++)
+            printf("El jugador %d se llama %s y mide %.2f metros.\n", i + 1, team_datage[i].name, team_datage[i].height);
+    }
+    else if (choose_menu == 2) {
+        printf("Introduce el nombre del jugador: ");
+        scanf("%s", temp_name);
+        for(int j = 0; j < cant_players; j++) {
+            if (strcmp(temp_name, team_datage[j].name) == 0) {
+                printf("El jugador %s mide %.2f metros y tiene %d años.\n", team_datage[j].name, team_datage[j].height, team_datage[j].age);
+                break;
+            }
+        }
+    }
+    else if (choose_menu == 3) {
+        for (int k = 0; k < cant_players - 1; k++) {
+            if ((team_datage[k].height < team_datage[k + 1].height) && (high_height <= team_datage[k + 1].height))
+                high_height = team_datage[k + 1].height;
+            }
+        for (int l = 0; l < cant_players; l++) {
+            if (high_height == team_datage[l].height)
+                printf("El/los jugador/es más alto/s del equipo se llama/n %s y tiene/n %d años.\n", team_datage[l].name, team_datage[l].age);
+        }
+    }
+    else
+        printf("¡Error!, no has elegido un número válido.");
 }
 
 int main() {
@@ -333,7 +387,7 @@ int main() {
     printf("\n");
     look_for_char();
     printf("\n");*/
-    ();
+    basket_team();
     printf("\n");
     return 0;
 }
