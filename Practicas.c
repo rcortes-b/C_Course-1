@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#ifndef MPI
+#define MPI 3.14159265358979323846
+#endif
 
 /*void area_rectangulo() {
     //Se inicializan las variables, el area es ancho * largo
@@ -297,7 +301,8 @@ void look_for_char()
         else if (str[j + 1] == '\0')
             printf("No se ha encontrado ninguna coincidencia.");
     }
-}*/
+}
+
 void basket_team()
 {
     int cant_players, choose_menu;
@@ -313,49 +318,151 @@ void basket_team()
     scanf("%d", &cant_players);
     printf("\n");
     for (int i = 0; i < cant_players; i++) { //Esto almacena los datos de los jugadores del equipo :)
-        printf("Introduce el nombre del jugador número %d: ", i + 1); //Sólo puede mostrar nombre, no apellidos. Y el nombre debe ser simple.
+        printf("Introduce el nombre del jugador número %d: ", (i + 1)); //Sólo puede mostrar nombre, no apellidos. Y el nombre debe ser simple.
         scanf("%s", team_datage[i].name);
-        printf("Introduce la edad del jugador número %d: ", i + 1);
+        printf("Introduce la edad del jugador número %d: ", (i + 1));
         scanf("%d", &team_datage[i].age);
-        printf("Introduce la altura del jugador número %d: ", i + 1);
+        printf("Introduce la altura del jugador número %d: ", (i + 1));
         scanf("%f", &team_datage[i].height);
         printf("\n");
     }
-    high_height = team_datage[0]. height;
-    printf("-----Elige una opción-----\n"); //Presenta un menú con las 3 opciones disponibles
-    printf("--Introduce 1 para listar los nombres y la altura de los jugadores--\n");
-    printf("--Introduce 2 para buscar un jugador por su nombre y presentar su altura y su edad--\n");
-    printf("--Introduce 3 para ver cual es el nombre y la edad del jugador más alto del equipo--\n");
-    printf("Tu elección: ");
-    scanf("%d", &choose_menu);
+    while (choose_menu != 9) { //Hace un bucle del menú hasta que se introduce un número que no sea 1, 2 o 3 ya que entra en 'else' junto a un 'break'
+        high_height = team_datage[0]. height;
+        printf("\n-----Elige una opción-----\n"); //Presenta un menú con las 3 opciones disponibles
+        printf("--Introduce 1 para listar los nombres y la altura de los jugadores--\n");
+        printf("--Introduce 2 para buscar un jugador por su nombre y presentar su altura y su edad--\n");
+        printf("--Introduce 3 para ver cual es el nombre y la edad del jugador más alto del equipo--\n");
+        printf("--Introduce cualquier otro número para salir del menú :)");
+        printf("\nTu elección: ");
+        scanf("%d", &choose_menu);
     
-    if (choose_menu == 1) {
-        for (int i = 0; i < cant_players; i++)
-            printf("El jugador %d se llama %s y mide %.2f metros.\n", i + 1, team_datage[i].name, team_datage[i].height);
-    }
-    else if (choose_menu == 2) {
-        printf("Introduce el nombre del jugador: ");
-        scanf("%s", temp_name);
-        for(int j = 0; j < cant_players; j++) {
-            if (strcmp(temp_name, team_datage[j].name) == 0) {
-                printf("El jugador %s mide %.2f metros y tiene %d años.\n", team_datage[j].name, team_datage[j].height, team_datage[j].age);
-                break;
+        if (choose_menu == 1) {
+            for (int i = 0; i < cant_players; i++)
+                printf("El jugador %d se llama %s y mide %.2f metros.\n", i + 1, team_datage[i].name, team_datage[i].height);
+        }
+        else if (choose_menu == 2) {
+            printf("Introduce el nombre del jugador: ");
+            scanf("%s", temp_name);
+          for(int j = 0; j < cant_players; j++) {
+                if (strcmp(temp_name, team_datage[j].name) == 0) {
+                    printf("El jugador %s mide %.2f metros y tiene %d años.\n", team_datage[j].name, team_datage[j].height, team_datage[j].age);
+                    break;
+                }
             }
         }
-    }
-    else if (choose_menu == 3) {
-        for (int k = 0; k < cant_players - 1; k++) {
-            if ((team_datage[k].height < team_datage[k + 1].height) && (high_height <= team_datage[k + 1].height))
-                high_height = team_datage[k + 1].height;
+        else if (choose_menu == 3) {
+            for (int k = 0; k < cant_players - 1; k++) {
+                if ((team_datage[k].height < team_datage[k + 1].height) && (high_height <= team_datage[k + 1].height))
+                    high_height = team_datage[k + 1].height;
+                }
+            for (int l = 0; l < cant_players; l++) {
+                if (high_height == team_datage[l].height)
+                    printf("El/los jugador/es más alto/s del equipo se llama/n %s y tiene/n %d años.\n", team_datage[l].name, team_datage[l].age);
             }
-        for (int l = 0; l < cant_players; l++) {
-            if (high_height == team_datage[l].height)
-                printf("El/los jugador/es más alto/s del equipo se llama/n %s y tiene/n %d años.\n", team_datage[l].name, team_datage[l].age);
+        }
+        else {
+            printf("No has elegido un número válido y has sido expulsado del menú.\n");
+            break;
         }
     }
-    else
-        printf("¡Error!, no has elegido un número válido.");
 }
+
+void motor_power()
+{
+    struct stcilindro {
+        float diametro;
+        float carrera;
+    };
+    struct info_motor {
+        int motor_id;
+        struct stcilindro info_cilindro;
+        int cant_cil;
+        float cilindrada;
+        };
+    struct info_motor motor;
+    float carr_cm = 0, diam_cm = 0;
+
+    //Este bloque empieza aquí y almacena toda la información necesaría
+    printf("Introduce el número del identificador del motor: "); //Aquí tengo mis dudas de si es valor solo númerico, si es un string y cuánto ocupa (int o long int)
+    scanf("%d", &motor.motor_id);
+    printf("Introduce el número de cilindros del motor: ");
+    scanf("%d", &motor.cant_cil);
+    printf("Introduce la carrera del cilíndro (en milímetros): ");
+    scanf("%f", &motor.info_cilindro.carrera);
+    printf("Introduce el diámetro del cilíndro (en milímetros): ");
+    scanf("%f", &motor.info_cilindro.diametro);
+    //El bloque termina aquí
+    carr_cm = motor.info_cilindro.carrera / 10;
+    diam_cm = motor.info_cilindro.diametro / 10;
+    //Pasamos la carrera y el diámetro del cilíndro a centímetros
+    motor.cilindrada = (motor.cant_cil * carr_cm * MPI * (diam_cm * diam_cm)) / 4;
+    //Calculamos la cilíndrada
+    printf("\n-----Aquí están los datos introducidos y la cilindrada correspondiente-----\n");
+    printf("--Número del identificador del motor: %d\n", motor.motor_id);
+    printf("--Número de cilíndros del motor: %d\n", motor.cant_cil);
+    printf("--La carrera del cilíndro (en mm) es %.2f y el diámetro (en mm) es %.2f\n", motor.info_cilindro.carrera, motor.info_cilindro.diametro);
+    printf("\n--La cilindrada del motor es: %.2f--\n", motor.cilindrada);
+    //Mostramos todos los datos y la cilíndrada obtenida a raíz de los datos introducidos
+}
+
+void museum_entry()
+{
+    struct entry_hour {
+        int hour;
+        int minute;
+    };
+    struct info_entry {
+        struct entry_hour entry_time;
+        int ppl_cuant;
+        float tot_price;        
+    };
+
+    struct info_entry info_museum[100]; //Almaceno los datos de los grupos
+    int *edad; //Defino esto y lo inicializo con un malloc
+    char continue_or_not = 'S';
+    int group_number = 0, five_eur_counter = 0, eight_eur_counter = 0, ten_eur_counter = 0;
+    
+    while (continue_or_not != 'N') 
+    {
+        if (continue_or_not == 'S') { //Al inicializar con S entra esta condición
+            printf("--Introduce los datos del grupo %d--\n", group_number + 1);
+            printf("\nHora de entrada: ");
+            scanf("%d", &info_museum[group_number].entry_time.hour);
+            printf("Minutos de entrada: ");
+            scanf("%d", &info_museum[group_number].entry_time.minute);
+            printf("¿Cuántas personas formarn el grupo? ");
+            scanf("%d", &info_museum[group_number].ppl_cuant);
+            edad = malloc(sizeof(int) * (info_museum[group_number].ppl_cuant + 1)); //Almaceno suficiente espacio para almacenar todas las edades
+            for(int i = 0; i < info_museum[group_number].ppl_cuant; i++) {
+                printf("Introduce la edad del asistente Nº%d del grupo: ", i + 1);
+                scanf("%d", &edad[i]);
+                if (edad[i] >= 6 && edad[i] < 16)
+                    five_eur_counter++;
+                else if (edad[i] < 6)
+                    continue;
+                else if ((edad[i] > 15 && edad[i] < 27) || edad[i] >= 65)
+                    eight_eur_counter++;
+                else
+                    ten_eur_counter++;
+            }
+            info_museum[group_number].tot_price = (five_eur_counter * 5) + (eight_eur_counter * 8) + (ten_eur_counter * 10);
+            if (info_museum[group_number].ppl_cuant < 5)
+                printf("\nEl precio total de las entradas es de %.2f€\n", info_museum[group_number].tot_price);
+            else {
+                info_museum[group_number].tot_price = info_museum[group_number].tot_price - ((info_museum[group_number].tot_price * 1.1) - info_museum[group_number].tot_price);
+                printf("\nEl precio total de las entradas con un descuento del 10%% es de %.2f€\n", info_museum[group_number].tot_price);
+            }
+        }
+        else { //Si no se introduce S o N pide de vuelta un carácter válido
+            printf("Introduce un carácter válido 'S' o 'N': ");
+            scanf(" %c", &continue_or_not);
+        }
+        group_number++;
+        printf("\nIntroduce 'S' para almacenar los datos de otro grupo o 'N' para salir del menú: ");
+        scanf(" %c", &continue_or_not);
+    }
+    printf("Gracias por usar el programa, ¡nos vemos con el siguiente grupo :D!\n");
+}*/
 
 int main() {
     //No necesito pedir parametros en las funciones debido a que depende del usuario mediante 'scanf'
@@ -386,8 +493,12 @@ int main() {
     intro_cadena();
     printf("\n");
     look_for_char();
-    printf("\n");*/
+    printf("\n");
     basket_team();
     printf("\n");
+    motor_power();
+    printf("\n");
+    museum_entry();
+    printf("\n");*/
     return 0;
 }
