@@ -546,11 +546,6 @@ void registro_producto()
     producto = NULL;
 }
 
-void f()
-{
-    
-}
-
 int main() {
     //No necesito pedir parametros en las funciones debido a que depende del usuario mediante 'scanf'
     area_rectangulo();
