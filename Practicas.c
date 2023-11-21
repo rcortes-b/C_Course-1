@@ -462,7 +462,65 @@ void museum_entry()
         scanf(" %c", &continue_or_not);
     }
     printf("Gracias por usar el programa, ¡nos vemos con el siguiente grupo :D!\n");
+}
+
+void real_vector_pointer()
+{
+    float vector[5];
+    float alma_num = 0;
+    for (int i = 0; i < 5; i++) {
+        printf("Introduce la posición Nº%d del vector de números reales: ", i);
+        scanf("%f", &vector[i]);
+    }
+    float *punteroAVector = &vector[0]; //El puntero apunta siempre a la primera posición del vector / primer catácter de un string. Si le pasamos la dirección de la primera posición del vector lo estamos igualando y haciendo el vector 'todo suyo'.
+    for (int j = 0; j < 5; j++) {
+        alma_num += *(punteroAVector + j); //Esta sintaxis itera en las posiciones del vector, pasando desde la 0 hasta la 4 (5 = NULL)
+    }
+    alma_num /= 5;
+    printf("La media de los valores almacenados es %.2f\n", alma_num);
+}
+
+void vector_por_valor(int *vector, int size, int num)
+{
+    for(int i = 0; i < size; i++)
+        *(vector + i) *= num; //Con esta sintaxis no se acumula el valor, itera y multiplica cada valor del vector por el numero SIN ACUMULAR, interesante!!!.
+}       //También sirve *(vector++)
+
+void save_table()
+{
+    int num;
+    FILE *f;
+    int *res;
+
+    printf("Introduce un número a partir del cual se generará su tabla de multiplicar: ");
+    scanf("%d", &num);
+    f = fopen("tabla.txt","w"); //Abro el archivo en modo escritura de modo que se elimina todo el contenido y se escribe el que yo le indico
+    for (int i = 0; i <= 10; i++) {
+        res[i] = num * i; //Almaceno el resultado de cada multiplicación en un array de int
+        fprintf(f, "%d ", res[i]); //Para escribir en el fichero
+    }
+    fclose(f); //Para cerrar el fichero
+}
+
+void suma_file()
+{
+    FILE *f;
+    float read_num;
+    float res_suma = 0;
+
+    f = fopen("números.txt", "r");
+    while (feof(f) == 0) {
+        fscanf(f, "%f", &read_num);
+        res_suma += read_num;
+    }
+    fclose(f);
+    printf("La suma de los números del fichero es: %.2f", res_suma);
 }*/
+
+void ()
+{
+    
+}
 
 int main() {
     //No necesito pedir parametros en las funciones debido a que depende del usuario mediante 'scanf'
@@ -499,6 +557,22 @@ int main() {
     motor_power();
     printf("\n");
     museum_entry();
+    printf("\n");
+    real_vector_pointer();
+    printf("\n");
+    
+    int vector[4] = {10, 12, 23, 25};
+    vector_por_valor(&vector[0], 4, 10); //Le pasa la dirección de la primera posición como parámetro, interesante!!!
+    for (int i = 0; i < 4; i++) {
+        printf("%d ", vector[i]);
+    }
+    printf("\n");
+
+    save_table();
+    printf("\n");
+    suma_file();
     printf("\n");*/
+    next_function();
+    printf("\n");
     return 0;
 }
