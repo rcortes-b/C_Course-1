@@ -490,7 +490,7 @@ void save_table()
 {
     int num;
     FILE *f;
-    int *res;
+    int res[11];
 
     printf("Introduce un número a partir del cual se generará su tabla de multiplicar: ");
     scanf("%d", &num);
