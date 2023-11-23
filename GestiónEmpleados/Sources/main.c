@@ -5,11 +5,11 @@
 int main() {
     
     int choose_menu;
-    struct empleado empleados[100];
+    struct empleado empleados[100]; //Defino un array donde almaceno los datos de cada empleado
     
     int emp_cant = 0;
-    emp_cant = cargarEmpleados(empleados);
-    printf("El número de empleados es %d", emp_cant);
+    emp_cant = cargarEmpleados(empleados);  //Le asigno a la variable la cantidad de empleados que habrán
+    //printf("El número de empleados es %d", emp_cant);
 
     printf("¡Bienvenido/a al gestor de empleados!\n"); //Bienvenida al Software
     display_menu(); //Se imprimen las opciones por pantalla
