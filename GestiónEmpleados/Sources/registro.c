@@ -37,3 +37,15 @@ int cargarEmpleados(struct empleado empleados[100]) //Se busca saber la cantidad
     fclose(f);
     return (nEmp); //Devuelve la cantidad de empleados
 }
+
+void save_datos(struct empleado empleados[100], int emp_cant)
+{
+    FILE *f;
+    f = fopen("empleados.txt","w");
+
+    for (int i = 0; i < emp_cant - 1; i++) {
+        fprintf(f, "%s;%d;%.2f;%.1f\n", empleados[i].name, empleados[i].id, empleados[i].salary, empleados[i].hour);
+    }
+    fprintf(f, "%s;%d;%.2f;%.1f", empleados[emp_cant - 1].name, empleados[emp_cant - 1].id, empleados[emp_cant - 1].salary, empleados[emp_cant - 1].hour);
+    fclose(f);
+}
