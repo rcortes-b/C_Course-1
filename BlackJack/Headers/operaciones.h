@@ -7,9 +7,12 @@ struct partidas {
 };
 
 int display_menu();
-int start_game(struct partidas partida);
+int start_game();
 int genera_carta_a(int num1, int num_palo);
 int reparte_cartas(int num1, int num_palo, int num2, int num_palo2);
-void game_logic(struct partidas partida, int players);
+void game_logic(struct partidas *partida, int players);
+void ranking(struct partidas *partida, int players);
+void add_game(struct partidas *partida, int players);
+void read_file();
 
 #endif

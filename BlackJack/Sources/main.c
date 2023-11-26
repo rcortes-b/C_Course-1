@@ -1,33 +1,34 @@
 #include "operaciones.h"
-#include "persistencia.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 int main() {
-    int opcion = -1;
-    int players = 0;
+    int opcion = -1, players = 0;
+    FILE *f;
     struct partidas partida;
-    //get_fecha();
-    //srand(time(NULL));
-    //for (int i = 0; i < 5; i++) {printf("%d\n", rand() % 100);}
 
     while (opcion != 0) {
         opcion = display_menu();
         if (opcion == 1) {
-            players = start_game(partida);
-            game_logic(partida, players);
-            //for (int i = 0; i < players; i++)
-            //    printf("Nombre player: %s\n", partida.player[i]);
+            players = start_game();
+            if (players != 0) {
+                for (int i = 0; i < players; i++) {
+                    partida.player[i] = malloc(sizeof(char) * 50);
+                    printf("Introduce el nombre del jugador %d: ", i + 1);
+                    scanf("%s", partida.player[i]);
+                }
+                ranking(&partida, players);
+                add_game(&partida, players);
+            }
         }
         else if (opcion == 2) {
-            printf("\nLoad Games\n\n");
-    
+            printf("\n");
+            read_file();
+            printf("\n");
         }
         else if (opcion != 0)
             printf("\nIntroduce una opción válida.\n\n");
     }
     printf("\nGracias por jugar al BlackJack,\n¡esperamos volver a verte pronto!\n");
 }
-
-//Formato de 'FILE'--->Fecha: %s--Name: %s - Points: %d;Name2: %s - Points2: %d\n

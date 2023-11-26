@@ -53,20 +53,6 @@ int genera_carta(int num1, int num_palo)
     return num1;
 }
 
-void get_fecha()
-{
-    time_t t = time(NULL);
-    struct tm timeLocal = *localtime(&t);
-    char fechaHora[30];
-    char *formato = "%d-%m-%Y %H:%M:%S";
-    int bytesEscritos = strftime(fechaHora, sizeof fechaHora, formato, &timeLocal);
-    if (bytesEscritos != 0) {
-        printf("Fecha: %s", fechaHora);
-    }
-    else
-        printf("Error formatenado la fecha");
-}
-
 int check_carta(int num1, int num_palo, int num2, int num_palo2)
 {
     if (num1 == num2 && num_palo == num_palo2) {

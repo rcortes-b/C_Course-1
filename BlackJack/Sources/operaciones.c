@@ -21,15 +21,15 @@ int display_menu()
 }
 
 
-int start_game(struct partidas partida)
+int start_game()
 {
-    int players, not_correct = 0;
+    int players;
     printf("Introduce la cantidad de jugadores (2-4) o '0' para salir al menú: ");
     scanf("%d", &players);
     
     while (players < 2 || players > 4) {
         if (players == 0)
-            return 1;
+            return 0;
         printf("Introduce un número de jugadores válido o '0' para salir al menú: ");
         scanf("%d", &players);
     }
@@ -114,14 +114,9 @@ int reparte_cartas(int num1, int num_palo, int num2, int num_palo2)
     return punt1;
 }
 
-void game_logic(struct partidas partida, int players)
+void game_logic(struct partidas *partida, int players)
 {
     int punt1 = 0, punt2 = 0, opcion, punt3 = 0;
-    for (int i = 0; i < players; i++) {
-        partida.player[i] = malloc(sizeof(char) * 50);
-        printf("Introduce el nombre del jugador %d: ", i + 1);
-        scanf("%s", partida.player[i]);
-    }
 
     printf("¡Que empiece la partida! ¡Suerte!\n");
     for (int i = 0; i < players; i++) {
@@ -131,19 +126,19 @@ void game_logic(struct partidas partida, int players)
         int num2 = rand() % 13;
         int num_palo2 = rand() % 4;
         opcion = -1;
-        printf("Turno de: %s\n", partida.player[i]);
+        printf("Turno de: %s\n", partida->player[i]);
         
         punt1 = reparte_cartas(num1, num_palo, num2, num_palo2);
-        punt2 = reparte_cartas(num2, num_palo2, num1, num_palo); 
+        punt2 = reparte_cartas(num2, num_palo2, num1, num_palo);
         if (punt1 == 0)
             punt1 = check_A(punt1);
         if (punt2 == 0)
             punt2 = check_A(punt2);
         
-            partida.puntos[i] = punt1 + punt2;
-            printf("Puntos totales: %d\n", punt1 + punt2);
-            printf("[1] Obtener otra carta\n");
-            printf("[2] Terminar el turno.\n");
+        partida->puntos[i] = punt1 + punt2;
+        printf("Puntos totales: %d\n", punt1 + punt2);
+        printf("[1] Obtener otra carta\n");
+        printf("[2] Terminar el turno.\n");
 
         while (opcion != 2) {
             int num3 = rand() % 13;
@@ -162,20 +157,84 @@ void game_logic(struct partidas partida, int players)
                     }
                 }
 
-                partida.puntos[i] += punt3;
+                partida->puntos[i] += punt3;
                 printf("[1] Obtener otra carta\n");
                 printf("[2] Terminar el turno.\n");
-                if (partida.puntos[i] > 21) {
+                if (partida->puntos[i] > 21) {
                     printf("Los puntos totales superan el máximo, ¡Has perdido!.\n");
-                    partida.puntos[i] = 0;
+                    partida->puntos[i] = 0;
                     break;
                 }
-                printf("Puntos totales: %d\n", partida.puntos[i]);
+                printf("Puntos totales: %d\n", partida->puntos[i]);
             }
             else if (opcion != 2)
                 printf("La opción introducida no es una opción válida.\n");
         }
-    } //Aqui tengo que decir quien ha ganado y los puntos (Ranking). Tengo que solucionar el randomizado. Tengo que dar la condicion que dos cartas no coincidan.
-      //Tengo que cargar las partidas y luego hacer el append de cada partida
+    } //Tengo que dar la condicion que dos cartas no coincidan.
 }
-//Crear otra función de generar_carta pero sin la opcion de si sale A, y ponersela manual en la function.
+
+void ranking(struct partidas *partida, int players)
+{
+    game_logic(partida, players);
+    char temp_name[30];
+    int temp_points, last_player = 0;
+    for (int i = 0; i < players - 1; i++) {
+        for (int j = i + 1; j < players; j++) {
+            if (partida->puntos[i] < partida->puntos[j]) {
+                temp_points = partida->puntos[j];
+                partida->puntos[j] = partida->puntos[i];
+                partida->puntos[i] = temp_points;
+                strcpy(temp_name, partida->player[j]);
+                strcpy(partida->player[j], partida->player[i]);
+                strcpy(partida->player[i], temp_name);
+            }
+        }
+        if (partida->puntos[i] == partida->puntos[i - 1]) {
+            printf("El/la jugador/a %s con una puntuación de %d puntos ha empatado con %s. ¡NO ESTÁ NADA MAL!.\n", partida->player[i], partida->puntos[i], partida->player[i - 1]);
+        }
+        else if (i == 0)
+            printf("El primer puesto se lo lleva %s con una puntuación total de %d puntos. ¡FELICIDADES!.\n", partida->player[i], partida->puntos[i]);
+        else if (i == 1)
+            printf("El segundo puesto se lo lleva %s con una puntuación total de %d puntos. ¡GOOD JOB!.\n", partida->player[i], partida->puntos[i]);
+        else if (i == 2)
+            printf("El tercer puesto se lo lleva %s con una puntuación total de %d puntos. ¡NICE JOB!.\n", partida->player[i], partida->puntos[i]);
+        if (i + 1 == players - 1)
+            last_player = i + 1;
+    }
+    if (partida->puntos[last_player] != partida->puntos[last_player - 1])
+        printf("En último lugar está %s con una puntuación total de %d puntos. ¡NICE TRY!.\n", partida->player[last_player], partida->puntos[last_player]);
+    else
+        printf("El/la jugador/a %s con una puntuación de %d puntos ha empatado con %s. ¡NO ESTÁ NADA MAL!.\n", partida->player[last_player], partida->puntos[last_player], partida->player[last_player - 1]);
+}
+
+void add_game(struct partidas *partida, int players)
+{
+    FILE *f;
+    time_t t = time(NULL);
+    struct tm timeLocal = *localtime(&t);
+    char fechaHora[30];
+    char *formato = "%d/%m/%Y %H:%M:%S";
+    int bytesEscritos = strftime(fechaHora, sizeof fechaHora, formato, &timeLocal);
+    
+    f = fopen("games.txt","a");
+    fprintf(f, "Fecha: %s--", fechaHora);
+    for(int l = 0; l < players; l++) {
+        if (l != players - 1)
+            fprintf(f,"Nombre: %s - Puntos: %d;", partida->player[l], partida->puntos[l]);
+        else
+            fprintf(f,"Nombre: %s - Puntos: %d\n", partida->player[l], partida->puntos[l]);
+    }
+    fclose(f);
+}
+
+void read_file()
+{
+    FILE *f;
+    char linea[255];
+    f = fopen("games.txt","r");
+    while (feof(f) == 0) {
+        fgets(linea, 255, f);
+        printf("%s", linea);
+    }
+    fclose(f);
+}
