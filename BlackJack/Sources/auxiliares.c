@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-int genera_carta(int num1, int num_palo)
+int genera_carta(int num1, int num_palo) //Genera una carta, sin comprobaciones ni validar la 'A' como 1 u 11.
 {
     char *palo;
     char *num_carta;
@@ -53,7 +53,7 @@ int genera_carta(int num1, int num_palo)
     return num1;
 }
 
-int check_carta(int num1, int num_palo, int num2, int num_palo2)
+int check_carta(int num1, int num_palo, int num2, int num_palo2) //Para comprobar si los números aleatorios coinciden y la carta será la misma
 {
     if (num1 == num2 && num_palo == num_palo2) {
         return 1;
@@ -61,7 +61,7 @@ int check_carta(int num1, int num_palo, int num2, int num_palo2)
     return 0;
 }
 
-int check_A(int num1)
+int check_A(int num1) //Complementa la función de 'reparte_cartas' de modo que si hay una 'A' se podrá validar como 1 u 11 puntos.
 {
     while (num1 != 11 && num1 != 1) {
         if (num1 == 0) {

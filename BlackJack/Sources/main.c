@@ -30,5 +30,7 @@ int main() {
         else if (opcion != 0)
             printf("\nIntroduce una opción válida.\n\n");
     }
+    for (int j = 0; j < players; j++)
+        free (partida.player[j]);
     printf("\nGracias por jugar al BlackJack,\n¡esperamos volver a verte pronto!\n");
 }

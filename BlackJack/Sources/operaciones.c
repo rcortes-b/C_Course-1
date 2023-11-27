@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int display_menu()
+int display_menu() //Menú inicial
 {
     int opcion;
     printf("----------BIENVENIDO AL BLACK JACK----------\n");
@@ -33,10 +33,10 @@ int start_game()
         printf("Introduce un número de jugadores válido o '0' para salir al menú: ");
         scanf("%d", &players);
     }
-    return players;
+    return players; //Calcula la cantidad de players que habrán en la partida
 }
 
-int genera_carta_a(int num1, int num_palo)
+int genera_carta_a(int num1, int num_palo) //Genera una carta y si es un A da opción a valer 1 u 11 puntos
 {
     char *palo;
     char *num_carta;
@@ -96,7 +96,7 @@ int genera_carta_a(int num1, int num_palo)
     return num1;
 }
 
-int reparte_cartas(int num1, int num_palo, int num2, int num_palo2)
+int reparte_cartas(int num1, int num_palo, int num2, int num_palo2) //Genera una carta, habiendo comprobado ya que no coincida con la anterior (Válido para la 2da)
 {
     int punt1 = -1, punt2 = -1;
     if (check_carta(num1, num_palo, num2, num_palo2) == 0) {
@@ -116,20 +116,18 @@ int reparte_cartas(int num1, int num_palo, int num2, int num_palo2)
 
 void game_logic(struct partidas *partida, int players)
 {
-    int punt1 = 0, punt2 = 0, opcion, punt3 = 0;
+    int punt1 = 0, punt2 = 0, punt3 = 0;
 
     printf("¡Que empiece la partida! ¡Suerte!\n");
     for (int i = 0; i < players; i++) {
         srand(time(NULL));
-        int num1 = rand() % 13;
-        int num_palo = rand() % 4;
-        int num2 = rand() % 13;
-        int num_palo2 = rand() % 4;
-        opcion = -1;
+        int num1 = rand() % 13, num_palo = rand() % 4; //Randomizado primera carta
+        int num2 = rand() % 13, num_palo2 = rand() % 4; //Randomizado segunda carta
+        int opcion = -1;
         printf("Turno de: %s\n", partida->player[i]);
         
-        punt1 = reparte_cartas(num1, num_palo, num2, num_palo2);
-        punt2 = reparte_cartas(num2, num_palo2, num1, num_palo);
+        punt1 = reparte_cartas(num1, num_palo, num2, num_palo2); //Se genera la primera carta
+        punt2 = reparte_cartas(num2, num_palo2, num1, num_palo); //Se genera la segunda carta
         if (punt1 == 0)
             punt1 = check_A(punt1);
         if (punt2 == 0)
@@ -141,11 +139,10 @@ void game_logic(struct partidas *partida, int players)
         printf("[2] Terminar el turno.\n");
 
         while (opcion != 2) {
-            int num3 = rand() % 13;
-            int num_palo3 = rand() % 100;
+            int num3 = rand() % 13, num_palo3 = rand() % 100;
             printf("¿Qué quieres hacer ahora? Elige una opción: ");
             scanf("%d", &opcion);
-            if (opcion == 1) {
+            if (opcion == 1) { //Comprueba que la carta no coincida con la primera y la segunda (si hay una cuarta no serviría para la tercera)
                 if ((check_carta(num1, num_palo, num3, num_palo3) == 0) && (check_carta(num3, num_palo3, num2, num_palo2) == 0))
                     punt3 = genera_carta_a(num3, num_palo3);
                 else {
@@ -156,7 +153,6 @@ void game_logic(struct partidas *partida, int players)
                             punt3 = genera_carta_a(num3, num_palo3);
                     }
                 }
-
                 partida->puntos[i] += punt3;
                 printf("[1] Obtener otra carta\n");
                 printf("[2] Terminar el turno.\n");
@@ -170,7 +166,7 @@ void game_logic(struct partidas *partida, int players)
             else if (opcion != 2)
                 printf("La opción introducida no es una opción válida.\n");
         }
-    } //Tengo que dar la condicion que dos cartas no coincidan.
+    } //Tengo que perfeccionar la condicion de que dos cartas no coincidan.
 }
 
 void ranking(struct partidas *partida, int players)
@@ -180,7 +176,7 @@ void ranking(struct partidas *partida, int players)
     int temp_points, last_player = 0;
     for (int i = 0; i < players - 1; i++) {
         for (int j = i + 1; j < players; j++) {
-            if (partida->puntos[i] < partida->puntos[j]) {
+            if (partida->puntos[i] < partida->puntos[j]) { //Swap names y puntos. Orden descendente.
                 temp_points = partida->puntos[j];
                 partida->puntos[j] = partida->puntos[i];
                 partida->puntos[i] = temp_points;
@@ -189,7 +185,7 @@ void ranking(struct partidas *partida, int players)
                 strcpy(partida->player[i], temp_name);
             }
         }
-        if (partida->puntos[i] == partida->puntos[i - 1]) {
+        if (partida->puntos[i] == partida->puntos[i - 1]) { //Detecta si hay un empate a puntos durante toda la partida
             printf("El/la jugador/a %s con una puntuación de %d puntos ha empatado con %s. ¡NO ESTÁ NADA MAL!.\n", partida->player[i], partida->puntos[i], partida->player[i - 1]);
         }
         else if (i == 0)
@@ -199,9 +195,9 @@ void ranking(struct partidas *partida, int players)
         else if (i == 2)
             printf("El tercer puesto se lo lleva %s con una puntuación total de %d puntos. ¡NICE JOB!.\n", partida->player[i], partida->puntos[i]);
         if (i + 1 == players - 1)
-            last_player = i + 1;
+            last_player = i + 1; //Se obtiene el último player para comprobar empates
     }
-    if (partida->puntos[last_player] != partida->puntos[last_player - 1])
+    if (partida->puntos[last_player] != partida->puntos[last_player - 1]) //Ya que el loop de arriba no llega a coger el último player se da una condición aquí
         printf("En último lugar está %s con una puntuación total de %d puntos. ¡NICE TRY!.\n", partida->player[last_player], partida->puntos[last_player]);
     else
         printf("El/la jugador/a %s con una puntuación de %d puntos ha empatado con %s. ¡NO ESTÁ NADA MAL!.\n", partida->player[last_player], partida->puntos[last_player], partida->player[last_player - 1]);
@@ -211,13 +207,16 @@ void add_game(struct partidas *partida, int players)
 {
     FILE *f;
     time_t t = time(NULL);
-    struct tm timeLocal = *localtime(&t);
+    struct tm timeLocal = *localtime(&t); //Estructura predefinida ISO, localtime sirve para coger el tiempo del dispositivo
     char fechaHora[30];
-    char *formato = "%d/%m/%Y %H:%M:%S";
-    int bytesEscritos = strftime(fechaHora, sizeof fechaHora, formato, &timeLocal);
-    
+    char *formato = "%d/%m/%Y %H:%M:%S"; //Formato como se verá la fecha, se puede modificar al gusto
+    int bytesEscritos = strftime(fechaHora, sizeof fechaHora, formato, &timeLocal); //Buffer, tamaño máximo del buffer, formato y la dirección a la variable de la fecha local
+        
     f = fopen("games.txt","a");
-    fprintf(f, "Fecha: %s--", fechaHora);
+    if (bytesEscritos != 0)
+        fprintf(f, "Fecha: %s--", fechaHora);
+    else
+        printf("Error al formatear la fecha.");
     for(int l = 0; l < players; l++) {
         if (l != players - 1)
             fprintf(f,"Nombre: %s - Puntos: %d;", partida->player[l], partida->puntos[l]);
@@ -232,8 +231,7 @@ void read_file()
     FILE *f;
     char linea[255];
     f = fopen("games.txt","r");
-    while (feof(f) == 0) {
-        fgets(linea, 255, f);
+    while (fgets(linea, 255, f) != NULL) { //Lee cada línea hasta que no haya contenido en una de estas.
         printf("%s", linea);
     }
     fclose(f);
